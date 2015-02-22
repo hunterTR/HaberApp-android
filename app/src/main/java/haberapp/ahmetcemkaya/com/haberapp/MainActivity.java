@@ -34,6 +34,7 @@ public class MainActivity extends ActionBarActivity
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private ArrayList<CardModel> al;
     private CardAdapter cardAdapter;
+    SwipeFlingAdapterView flingContainer;
     private int i;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -64,27 +65,37 @@ public class MainActivity extends ActionBarActivity
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container,sourcesFragment).commit();
 
-
-
 */
-            SwipeFlingAdapterView flingContainer = (SwipeFlingAdapterView) findViewById(R.id.frame);
+           flingContainer = (SwipeFlingAdapterView) findViewById(R.id.frame);
 
             al = new ArrayList<CardModel>();
 
 
-            al.add(new CardModel("Haber",R.drawable.ic_launcher));
-            al.add( new CardModel("Showers",R.drawable.ic_drawer));
-            al.add(new CardModel("Cloudy",R.drawable.ic_launcher));
-            al.add( new CardModel("Erdoğan gebersin",R.drawable.ic_drawer));
-            al.add(new CardModel("Siyasetin amk",R.drawable.ic_launcher));
-            al.add( new CardModel("Showers",R.drawable.ic_drawer));
+            al.add(new CardModel("TSK'dan gece operasyonu",R.drawable.tsk));
+            al.add(new CardModel("Erdoğan'dan 'Şah Fırat' tebriği",R.drawable.cumhurbaskani));
+            al.add(new CardModel("Kılıçdaroğlundan operasyon eleştirisi",R.drawable.kilicdaroglu));
+            al.add( new CardModel("Formula 1 korkutan kaza",R.drawable.formula1));
+            al.add(new CardModel("İşte operasyonun nedeni",R.drawable.disisleri));
+            al.add( new CardModel("Taksimde eylemcilerin arasında kaldı",R.drawable.adriana));
+            al.add(new CardModel("TSK'dan gece operasyonu",R.drawable.tsk));
+            al.add(new CardModel("Erdoğan'dan 'Şah Fırat' tebriği",R.drawable.cumhurbaskani));
+            al.add(new CardModel("Kılıçdaroğlundan operasyon eleştirisi",R.drawable.kilicdaroglu));
+            al.add( new CardModel("Formula 1 korkutan kaza",R.drawable.formula1));
+            al.add(new CardModel("İşte operasyonun nedeni",R.drawable.disisleri));
+            al.add( new CardModel("Taksimde eylemcilerin arasında kaldı",R.drawable.adriana));
+            al.add(new CardModel("TSK'dan gece operasyonu",R.drawable.tsk));
+            al.add(new CardModel("Erdoğan'dan 'Şah Fırat' tebriği",R.drawable.cumhurbaskani));
+            al.add(new CardModel("Kılıçdaroğlundan operasyon eleştirisi",R.drawable.kilicdaroglu));
+            al.add( new CardModel("Formula 1 korkutan kaza",R.drawable.formula1));
+            al.add(new CardModel("İşte operasyonun nedeni",R.drawable.disisleri));
+            al.add( new CardModel("Taksimde eylemcilerin arasında kaldı",R.drawable.adriana));
 
 
 
 
           //  arrayAdapter = new ArrayAdapter<>(this, R.layout.item, R.id.helloText, al );
-               cardAdapter = new CardAdapter(this,R.layout.item,al);
 
+            cardAdapter = new CardAdapter(this,R.layout.item,al);
             flingContainer.setAdapter(cardAdapter);
 
             flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
@@ -117,7 +128,7 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public void onAdapterAboutToEmpty(int itemsInAdapter) {
                     // Ask for more data here
-                    al.add(new CardModel("Cloudy",R.drawable.ic_launcher));
+                    al.add( new CardModel("Formula 1 korkutan kaza",R.drawable.formula1));
                     cardAdapter.notifyDataSetChanged();
                     //Log.d("LIST", "notified");
                     Log.e("movement" , "About to Empty!");
@@ -145,7 +156,7 @@ public class MainActivity extends ActionBarActivity
             });
 
 
-
+            flingContainer.setVisibility(View.GONE);
 }
     }
 
@@ -161,12 +172,24 @@ public class MainActivity extends ActionBarActivity
         {
             case 0:
                 swapFragment = new NewsSourceFragment();
+                if(flingContainer !=null)
+                {
+                    flingContainer.setVisibility(View.GONE);
+                }
                 break;
             case 1:
                 swapFragment = new CategoriesFragment();
+               // flingContainer.setVisibility(View.GONE);
+                if(flingContainer !=null)
+                {
+                    flingContainer.setVisibility(View.GONE);
+                }
                 break;
             case 2:
+            {
                 swapFragment=PlaceholderFragment.newInstance(position + 1);
+                flingContainer.setVisibility(View.VISIBLE);
+            }
                 break;
         }
         if(swapFragment !=null)
@@ -223,6 +246,7 @@ public class MainActivity extends ActionBarActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
             return true;
         }
 

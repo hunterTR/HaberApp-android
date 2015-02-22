@@ -4,14 +4,6 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <!-- As the main content view, the view below consumes the entire
-         space available using match_parent in both dimensions. -->
-    <FrameLayout android:id="@+id/container" android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-
-    </FrameLayout>
-
     <com.lorentzos.flingswipe.SwipeFlingAdapterView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,7 +13,18 @@
         app:rotation_degrees="16"
         app:max_visible="4"
         app:min_adapter_stack="2"
-        tools:context=".MainActivity"/>
+        tools:context=".MainActivity"
+        />
+
+    <!-- As the main content view, the view below consumes the entire
+         space available using match_parent in both dimensions. -->
+    <FrameLayout android:id="@+id/container" android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+
+    </FrameLayout>
+
+
 
 
     <!-- android:layout_gravity="start" tells DrawerLayout to treat

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HaberApp</string>
+    <string name="title_section1">Haber Kaynakları</string>
+    <string name="title_section2">Kategoriler</string>
+    <string name="title_section3">Haberler</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Sıradaki</string>
+    <string name="action_settings">Settings</string>
+
+</resources>

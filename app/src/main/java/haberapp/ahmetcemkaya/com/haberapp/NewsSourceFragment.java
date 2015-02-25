@@ -14,6 +14,7 @@ import android.widget.ListView;
  */
 public class NewsSourceFragment extends ListFragment {
     OnNewsSourceSelectedListener callback;
+    TinyDB tinydb;
 
     public interface OnNewsSourceSelectedListener{
 
@@ -24,6 +25,10 @@ public class NewsSourceFragment extends ListFragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        super.onAttach(activity);
+        ((MainActivity) activity).onSectionAttached(
+                1);
+        tinydb= new TinyDB(activity);
        try
        {
            callback = (OnNewsSourceSelectedListener) activity;
@@ -37,6 +42,7 @@ public class NewsSourceFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return super.onCreateView(inflater, container, savedInstanceState);
+
     }
 
     @Override
@@ -55,6 +61,7 @@ public class NewsSourceFragment extends ListFragment {
         if(v!=null){
             v.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         }
+        tinydb.putString("currentView","sources");
     }
 
 

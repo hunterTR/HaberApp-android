@@ -35,6 +35,9 @@ public class MainActivity extends ActionBarActivity
     private ArrayList<CardModel> al;
     private CardAdapter cardAdapter;
     SwipeFlingAdapterView flingContainer;
+    NewsSourceFragment newsSourceFragment;
+    CategoriesFragment categoriesFragment;
+    TinyDB tinydb;
     private int i;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -46,6 +49,11 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        tinydb = new TinyDB(this);
+
+        newsSourceFragment = new NewsSourceFragment();
+        categoriesFragment = new CategoriesFragment();
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -64,8 +72,8 @@ public class MainActivity extends ActionBarActivity
           /*  NewsSourceFragment sourcesFragment = new NewsSourceFragment();
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container,sourcesFragment).commit();
+            */
 
-*/
            flingContainer = (SwipeFlingAdapterView) findViewById(R.id.frame);
 
             al = new ArrayList<CardModel>();
@@ -138,7 +146,7 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public void onScroll(float scrollProgressPercent) {
 
-                 //   view.findViewById(R.id.item_swipe_right_indicator).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
+                   // view.findViewById(R.id.item_swipe_right_indicator).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
                    // view.findViewById(R.id.item_swipe_left_indicator).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
 
                 }
@@ -158,6 +166,12 @@ public class MainActivity extends ActionBarActivity
 
             flingContainer.setVisibility(View.GONE);
 }
+        // change fragment;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, newsSourceFragment)
+                .commit();
+
     }
 
 
@@ -171,14 +185,14 @@ public class MainActivity extends ActionBarActivity
         switch(position)
         {
             case 0:
-                swapFragment = new NewsSourceFragment();
+                swapFragment = newsSourceFragment;
                 if(flingContainer !=null)
                 {
                     flingContainer.setVisibility(View.GONE);
                 }
                 break;
             case 1:
-                swapFragment = new CategoriesFragment();
+                swapFragment = categoriesFragment;
                // flingContainer.setVisibility(View.GONE);
                 if(flingContainer !=null)
                 {
@@ -194,6 +208,7 @@ public class MainActivity extends ActionBarActivity
         }
         if(swapFragment !=null)
         {
+
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.container, swapFragment)
@@ -249,20 +264,46 @@ public class MainActivity extends ActionBarActivity
 
             return true;
         }
+        else if(id == R.id.action_forward)
+        {
+            String tmp = tinydb.getString("currentView");
+            switch(tmp)
+            {
+                case "sources":     // if the current view is sources.
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container,categoriesFragment)
+                            .commit();
+                    break;
+                case "categories":
+                    fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.container,PlaceholderFragment.newInstance(1))
+                            .commit();
+                    flingContainer.setVisibility(View.VISIBLE);
+                    break;
+                case "news":
+                //Change the card.
+                    break;
+            }
+
+            Log.e("Next","Next Button On Click");
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onSourceSelected(int position) {
-        Toast info = Toast.makeText(this,Ipsum.Sources[position]+" selected",Toast.LENGTH_SHORT);
-        info.show();
+       // Toast info = Toast.makeText(this,Ipsum.Sources[position]+" selected",Toast.LENGTH_SHORT);
+       // info.show();
     }
 
     @Override
     public void onCategorySelected(int position) {
-        Toast info = Toast.makeText(this,Ipsum.Categories[position]+" selected",Toast.LENGTH_SHORT);
-        info.show();
+       // Toast info = Toast.makeText(this,Ipsum.Categories[position]+" selected",Toast.LENGTH_SHORT);
+
+       // info.show();
     }
 
     /**

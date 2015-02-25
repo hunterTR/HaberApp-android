@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 /**
  * Created by ahmetcem on 22.2.2015.
+ * This is a custom adapter for cards.
  */
 public class CardAdapter extends ArrayAdapter<CardModel> {
 

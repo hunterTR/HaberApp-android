@@ -10,14 +10,13 @@ import android.widget.ImageView;
  */
 public class CardModel {
     public String title;
-    public int image;
-    public Bitmap bitmap;
+    public String newsURL;
     public String imageurl;
-    public ImageView imgv;
 
-    public CardModel(String modelTitle,String imageUrl)
+
+    public CardModel(String modelTitle,String imageUrl, String newsurl)
     {
-
+        newsURL = newsurl;
         imageurl = imageUrl;
         title = modelTitle;
     }

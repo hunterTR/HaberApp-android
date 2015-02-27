@@ -17,29 +17,22 @@ import java.net.URL;
 public class Ipsum {
 
     static String[] Sources = {
-            "Sözcü",
             "Hürriyet",
             "Milliyet",
             "Zaman",
-            "NTV",
-            "Habertürk",
-            "OdaTV",
-            "Cumhuriyet",
+            "Radikal",
             "Sporx",
-            "Sabah"
+            "(IFL)I Fucking Love Science"
 
     };
     static String[] Categories = {
             "Dünya",
             "Ekonomi",
             "Siyaset",
-            "Yaşam",
             "Spor",
-            "Finans",
             "Magazin",
             "Gündem",
             "Eğitim",
-            "Kültür",
             "Teknoloji",
             "Bilim"
     };

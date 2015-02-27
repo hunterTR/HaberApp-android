@@ -1,7 +1,9 @@
 package haberapp.ahmetcemkaya.com.haberapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -121,7 +123,7 @@ public class MainActivity extends ActionBarActivity
                    // makeToast(this, "Right!");
                     CardModel test =(CardModel)dataObject;
 
-                    Log.e("movement" , "Right! " +test.title);
+                    Log.e("movement" , "Right! " +test.imageurl);
                 }
 
                 @Override
@@ -150,6 +152,10 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public void onItemClicked(int itemPosition, Object dataObject) {
                 //    makeToast(this , "Clicked!");
+                    CardModel data = (CardModel)dataObject;
+                    Uri uri = Uri.parse(data.newsURL);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
                     Log.e("movement" , "Item Tapped!" + itemPosition);
                 }
             });
@@ -193,6 +199,7 @@ public class MainActivity extends ActionBarActivity
             case 2:
             {
                 swapFragment=PlaceholderFragment.newInstance(position + 1);
+                tinydb.putString("currentView","news");
                 flingContainer.setVisibility(View.VISIBLE);
             }
                 break;
@@ -262,16 +269,20 @@ public class MainActivity extends ActionBarActivity
             {
                 case "sources":     // if the current view is sources.
                     FragmentManager fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction()
+
+                    fragmentManager.beginTransaction().setCustomAnimations(R.anim.abc_slide_in_top,R.anim.abc_fade_out)
                             .replace(R.id.container,categoriesFragment)
                             .commit();
+                     getSupportActionBar().setTitle("Kategoriler");
                     break;
                 case "categories":
                     fragmentManager = getSupportFragmentManager();
-                    fragmentManager.beginTransaction()
+                    fragmentManager.beginTransaction().setCustomAnimations(R.anim.abc_slide_in_top,R.anim.abc_fade_out)
                             .replace(R.id.container,PlaceholderFragment.newInstance(1))
                             .commit();
                     flingContainer.setVisibility(View.VISIBLE);
+                    getSupportActionBar().setTitle("Haberler");
+
                     break;
                 case "news":
                 //Change the card.
@@ -305,14 +316,16 @@ public class MainActivity extends ActionBarActivity
         JSONArray articles;
         try {
             json = new JSONObject(result);
+
             articles = json.getJSONArray("result"); // get articles array
+
             articles.length(); // --> 2
             Log.e("LENGTH AMK",Integer.toString(articles.length()));
           for(int i = 0 ; i < articles.length() ; i++)
           {
               ImageView tmp = new ImageView(this);
 
-                al.add(new CardModel(articles.getJSONObject(i).getString("title"),articles.getJSONObject(i).getString("image")));
+                al.add(new CardModel(articles.getJSONObject(i).getString("title"),articles.getJSONObject(i).getString("image"),articles.getJSONObject(i).getString("url")));
           }
 
             cardAdapter.notifyDataSetChanged();

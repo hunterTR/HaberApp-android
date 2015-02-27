@@ -4,7 +4,6 @@
     android:layout_gravity="center"
     android:layout_width="320dp"
     android:layout_height="350dp"
-    android:background="@drawable/textlines"
     android:alpha="100"
     android:orientation="vertical">
 

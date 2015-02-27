@@ -10,12 +10,18 @@ import android.widget.Toast;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 /**
  * Created by ahmetcem on 26.2.2015.
@@ -24,17 +30,94 @@ public class HttpRequestTest {
 
     Activity main;
     JsonListener jsonListener;
+    ArrayList<String> categories;
+    ArrayList<String> sources;
+    TinyDB tinydb;
+
     public interface JsonListener
     {
+
         void onGetJsonListener(String result);
 
     }
     public HttpRequestTest(Activity activity){
 
         main = activity;
+        categories = new ArrayList<String>();
+        sources = new ArrayList<String>();
+        tinydb = new TinyDB(main);
+
+        updateConstraints();
     }
 
-    public static String GET(String url){
+    public void updateConstraints()
+    {
+       ArrayList<String> categoriesList =  tinydb.getList("categories");
+       ArrayList<String> sourceList = tinydb.getList("sources");
+
+        for ( int i = 0 ; i < categoriesList.size() ; i++)
+        {
+            switch(categoriesList.get(i))
+            {
+                case "0":
+                    categories.add("world");
+                    break;
+                case "1":
+                   categories.add("economy");
+                    break;
+                case "2":
+                    categories.add("politics");
+                    break;
+                case "3":
+                    categories.add("sport");
+                    break;
+                case "4":
+                    categories.add("magazin");
+                    break;
+                case "5":
+                    categories.add("tops");
+                    break;
+                case "6":
+                    categories.add("education");
+                    break;
+                case "7":
+                    categories.add("technology");
+                    break;
+                case "8":
+                    categories.add("science");
+                    break;
+
+            }
+        }
+
+        for (int h = 0; h < sourceList.size();h ++)
+        {
+            switch(sourceList.get(h))
+            {
+                case "0":
+                    sources.add("hurriyet");
+                    break;
+                case "1":
+                    sources.add("milliyet");
+                    break;
+                case "2":
+                    sources.add("zaman");
+                    break;
+                case "3":
+                    sources.add("radikal");
+                    break;
+                case "4":
+                    sources.add("sporx");
+                    break;
+                case "5":
+                    sources.add("ifl");
+                    break;
+            }
+        }
+
+    }
+
+    public String GET(String url){
         InputStream inputStream = null;
         String result = "";
 
@@ -43,8 +126,28 @@ public class HttpRequestTest {
             // create HttpClient
             HttpClient httpclient = new DefaultHttpClient();
 
+
+            HttpPost httpost = new HttpPost(url);
+
+            //convert parameters into JSON object
+           JSONObject holder = new JSONObject();
+            holder.put("categories",new JSONArray(categories));
+            holder.put("sources",new JSONArray(sources));
+
+            //passes the results to a string builder/entity
+            StringEntity se = new StringEntity(holder.toString());
+
+            //sets the post request as the resulting string
+            httpost.setEntity(se);
+            //sets a request header so the page receving the request
+            //will know what to do with it
+            httpost.setHeader("Accept", "application/json");
+            httpost.setHeader("Content-type", "application/json");
+
+
+
             // make GET request to the given URL
-            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
+            HttpResponse httpResponse = httpclient.execute(httpost);
 
             // receive response as inputStream
             inputStream = httpResponse.getEntity().getContent();
@@ -64,7 +167,7 @@ public class HttpRequestTest {
 
     public void test()
     {
-        new HttpAsyncTask().execute("http://178.62.245.125:3000/testGetNews");
+        new HttpAsyncTask().execute("http://178.62.245.125:3000/testGetNewsByPost");
     }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {

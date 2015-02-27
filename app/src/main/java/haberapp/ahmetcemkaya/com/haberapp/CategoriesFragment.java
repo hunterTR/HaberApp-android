@@ -87,9 +87,9 @@ public class CategoriesFragment extends ListFragment {
 
 
         setListAdapter(new ArrayAdapter<String>(getActivity(), layout, data));
-        v.setItemChecked(Integer.parseInt("1"),true);
-        positionList = tinydb.getList("positions");
+       // v.setItemChecked(Integer.parseInt("1"),true);
 
+        positionList = tinydb.getList("categories");
         for(int i = 0 ; i < positionList.size() ; i++ )
         {
             Log.e("position",positionList.get(i));
@@ -103,7 +103,7 @@ public class CategoriesFragment extends ListFragment {
     @Override
     public void onStart() {
         super.onStart();
-        positionList = new ArrayList();
+
 
 
 
@@ -113,7 +113,7 @@ public class CategoriesFragment extends ListFragment {
     @Override
     public void onPause() {
         super.onPause();
-        tinydb.putList("positions", positionList);
+        tinydb.putList("categories", positionList);
 
     }
 
@@ -122,7 +122,7 @@ public class CategoriesFragment extends ListFragment {
         super.onDetach();
 
 
-        tinydb.putList("positions", positionList);
+        tinydb.putList("categories", positionList);
     }
 
 
@@ -140,7 +140,7 @@ public class CategoriesFragment extends ListFragment {
             positionList.remove(Integer.toString(position));
 
         }
-        tinydb.putList("positions", positionList);
+        tinydb.putList("categories", positionList);
 
         callback.onCategorySelected(position);
     }

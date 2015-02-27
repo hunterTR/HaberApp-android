@@ -44,11 +44,9 @@ public class CardAdapter extends ArrayAdapter<CardModel> {
         {
             LayoutInflater inflater = ((Activity)context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
-
             holder = new CardHolder();
             holder.imgIcon = (ImageView)row.findViewById(R.id.testImageView);
             holder.txtTitle = (TextView)row.findViewById(R.id.helloText);
-
             row.setTag(holder);
         }
         else
@@ -58,7 +56,12 @@ public class CardAdapter extends ArrayAdapter<CardModel> {
 
         CardModel cardmodel = data.get(position);
         holder.txtTitle.setText(cardmodel.title);
-        Picasso.with(context).load(cardmodel.imageurl).into(holder.imgIcon);
+        if(cardmodel.imageurl != "null")
+        {
+            Picasso.with(context).load(cardmodel.imageurl).into(holder.imgIcon);
+        }
+        else
+            Picasso.with(context).load(R.drawable.dontknow).into(holder.imgIcon);
         //holder.imgIcon = cardmodel.imgv;
 
         return row;

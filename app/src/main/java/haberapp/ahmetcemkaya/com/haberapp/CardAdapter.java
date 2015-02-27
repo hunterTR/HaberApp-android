@@ -3,6 +3,8 @@ package haberapp.ahmetcemkaya.com.haberapp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -51,7 +58,8 @@ public class CardAdapter extends ArrayAdapter<CardModel> {
 
         CardModel cardmodel = data.get(position);
         holder.txtTitle.setText(cardmodel.title);
-        holder.imgIcon.setImageResource(cardmodel.image);
+        Picasso.with(context).load(cardmodel.imageurl).into(holder.imgIcon);
+        //holder.imgIcon = cardmodel.imgv;
 
         return row;
     }

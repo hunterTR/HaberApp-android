@@ -18,15 +18,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
+import com.squareup.picasso.Picasso;
+
+import org.apache.http.HttpRequest;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks,NewsSourceFragment.OnNewsSourceSelectedListener,CategoriesFragment.OnCategorySelectedListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,NewsSourceFragment.OnNewsSourceSelectedListener,CategoriesFragment.OnCategorySelectedListener,HttpRequestTest.JsonListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -34,6 +41,7 @@ public class MainActivity extends ActionBarActivity
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private ArrayList<CardModel> al;
     private CardAdapter cardAdapter;
+    HttpRequestTest request;
     SwipeFlingAdapterView flingContainer;
     NewsSourceFragment newsSourceFragment;
     CategoriesFragment categoriesFragment;
@@ -48,8 +56,8 @@ public class MainActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+        request = new HttpRequestTest(this);
+        request.jsonListener = this;
         tinydb = new TinyDB(this);
 
         newsSourceFragment = new NewsSourceFragment();
@@ -68,7 +76,7 @@ public class MainActivity extends ActionBarActivity
             {
                 return;
             }
-
+            request.test();
           /*  NewsSourceFragment sourcesFragment = new NewsSourceFragment();
 
             getSupportFragmentManager().beginTransaction().replace(R.id.container,sourcesFragment).commit();
@@ -79,24 +87,7 @@ public class MainActivity extends ActionBarActivity
             al = new ArrayList<CardModel>();
 
 
-            al.add(new CardModel("TSK'dan gece operasyonu",R.drawable.tsk));
-            al.add(new CardModel("Erdoğan'dan 'Şah Fırat' tebriği",R.drawable.cumhurbaskani));
-            al.add(new CardModel("Kılıçdaroğlundan operasyon eleştirisi",R.drawable.kilicdaroglu));
-            al.add( new CardModel("Formula 1 korkutan kaza",R.drawable.formula1));
-            al.add(new CardModel("İşte operasyonun nedeni",R.drawable.disisleri));
-            al.add( new CardModel("Taksimde eylemcilerin arasında kaldı",R.drawable.adriana));
-            al.add(new CardModel("TSK'dan gece operasyonu",R.drawable.tsk));
-            al.add(new CardModel("Erdoğan'dan 'Şah Fırat' tebriği",R.drawable.cumhurbaskani));
-            al.add(new CardModel("Kılıçdaroğlundan operasyon eleştirisi",R.drawable.kilicdaroglu));
-            al.add( new CardModel("Formula 1 korkutan kaza",R.drawable.formula1));
-            al.add(new CardModel("İşte operasyonun nedeni",R.drawable.disisleri));
-            al.add( new CardModel("Taksimde eylemcilerin arasında kaldı",R.drawable.adriana));
-            al.add(new CardModel("TSK'dan gece operasyonu",R.drawable.tsk));
-            al.add(new CardModel("Erdoğan'dan 'Şah Fırat' tebriği",R.drawable.cumhurbaskani));
-            al.add(new CardModel("Kılıçdaroğlundan operasyon eleştirisi",R.drawable.kilicdaroglu));
-            al.add( new CardModel("Formula 1 korkutan kaza",R.drawable.formula1));
-            al.add(new CardModel("İşte operasyonun nedeni",R.drawable.disisleri));
-            al.add( new CardModel("Taksimde eylemcilerin arasında kaldı",R.drawable.adriana));
+
 
 
 
@@ -136,7 +127,7 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public void onAdapterAboutToEmpty(int itemsInAdapter) {
                     // Ask for more data here
-                    al.add( new CardModel("Formula 1 korkutan kaza",R.drawable.formula1));
+                    //al.add( new CardModel("Formula 1 korkutan kaza",R.drawable.formula1));
                     cardAdapter.notifyDataSetChanged();
                     //Log.d("LIST", "notified");
                     Log.e("movement" , "About to Empty!");
@@ -304,6 +295,32 @@ public class MainActivity extends ActionBarActivity
        // Toast info = Toast.makeText(this,Ipsum.Categories[position]+" selected",Toast.LENGTH_SHORT);
 
        // info.show();
+    }
+
+    @Override
+    public void onGetJsonListener(String result) {
+        Log.e("JSON",result);
+
+        JSONObject json = null; // convert String to JSONObject
+        JSONArray articles;
+        try {
+            json = new JSONObject(result);
+            articles = json.getJSONArray("result"); // get articles array
+            articles.length(); // --> 2
+            Log.e("LENGTH AMK",Integer.toString(articles.length()));
+          for(int i = 0 ; i < articles.length() ; i++)
+          {
+              ImageView tmp = new ImageView(this);
+
+                al.add(new CardModel(articles.getJSONObject(i).getString("title"),articles.getJSONObject(i).getString("image")));
+          }
+
+            cardAdapter.notifyDataSetChanged();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     /**

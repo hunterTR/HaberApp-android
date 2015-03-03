@@ -19,6 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -154,8 +156,12 @@ public class MainActivity extends ActionBarActivity
                 //    makeToast(this , "Clicked!");
                     CardModel data = (CardModel)dataObject;
                     Uri uri = Uri.parse(data.newsURL);
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                   Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    //Intent intent;
+                    //intent = new Intent(this, WebViewActivity.class);
+
                     startActivity(intent);
+
                     Log.e("movement" , "Item Tapped!" + itemPosition);
                 }
             });
@@ -164,10 +170,23 @@ public class MainActivity extends ActionBarActivity
             flingContainer.setVisibility(View.GONE);
 }
         // change fragment;
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, newsSourceFragment)
-                .commit();
+        if(tinydb.getList("sources").size() <=0)
+        {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, newsSourceFragment)
+                    .commit();
+
+        }
+        else
+        {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container,PlaceholderFragment.newInstance(1))
+                    .commit();
+
+            flingContainer.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -380,5 +399,9 @@ public class MainActivity extends ActionBarActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
+//WEBVIEW CLIENT
+
+
 
 }

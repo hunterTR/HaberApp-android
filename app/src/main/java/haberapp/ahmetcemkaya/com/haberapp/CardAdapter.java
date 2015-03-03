@@ -12,11 +12,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+
 import java.util.ArrayList;
 
 /**
@@ -58,7 +57,17 @@ public class CardAdapter extends ArrayAdapter<CardModel> {
         holder.txtTitle.setText(cardmodel.title);
         if(cardmodel.imageurl != "null")
         {
-            Picasso.with(context).load(cardmodel.imageurl).into(holder.imgIcon);
+            Picasso.with(context).load(cardmodel.imageurl).into(holder.imgIcon,new Callback() {
+                @Override
+                public void onSuccess() {
+
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
         }
         else
             Picasso.with(context).load(R.drawable.dontknow).into(holder.imgIcon);

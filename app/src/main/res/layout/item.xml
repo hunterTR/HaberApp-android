@@ -26,8 +26,9 @@
         android:adjustViewBounds="false"
         android:transitionName="ss"
         android:scaleType="centerCrop"
+        android:layout_margin="0dp"
+        android:background="#ffffffff"
+        />
 
-
-        android:layout_margin="0dp" />
 
 </LinearLayout>

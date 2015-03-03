@@ -22,6 +22,9 @@ public class Ipsum {
             "Zaman",
             "Radikal",
             "Sporx",
+            "NTV",
+            "Diken",
+            "odaTV",
             "(IFL)I Fucking Love Science"
 
     };

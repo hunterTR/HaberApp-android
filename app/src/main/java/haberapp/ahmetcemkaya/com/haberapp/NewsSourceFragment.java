@@ -28,7 +28,7 @@ public class NewsSourceFragment extends ListFragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         ((MainActivity) activity).onSectionAttached(
-                2);
+                1);
 
         tinydb= new TinyDB(activity);
         try

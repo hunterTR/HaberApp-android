@@ -110,11 +110,19 @@ public class HttpRequestTest {
                     sources.add("sporx");
                     break;
                 case "5":
+                    sources.add("ntv");
+                    break;
+                case "6":
+                    sources.add("diken");
+                    break;
+                case "7":
+                    sources.add("odatv");
+                    break;
+                case "8":
                     sources.add("ifl");
                     break;
             }
         }
-
     }
 
     public String GET(String url){

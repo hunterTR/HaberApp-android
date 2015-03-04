@@ -127,7 +127,7 @@ public class MainActivity extends ActionBarActivity
                    // makeToast(this, "Left!");
                     CardModel test =(CardModel)dataObject;
                     reads.add(test.newsID);
-                    Log.e("movement" , "Left!" + test.newsID);
+                   // Log.e("movement" , "Left!" + test.newsID);
                 }
 
                 @Override
@@ -135,7 +135,7 @@ public class MainActivity extends ActionBarActivity
                    // makeToast(this, "Right!");
                     CardModel test =(CardModel)dataObject;
                     reads.add(test.newsID);
-                    Log.e("movement" , "Right! " +test.newsID);
+                 //   Log.e("movement" , "Right! " +test.newsID);
                 }
 
                 @Override
@@ -144,7 +144,7 @@ public class MainActivity extends ActionBarActivity
                     //al.add( new CardModel("Formula 1 korkutan kaza",R.drawable.formula1));
                     cardAdapter.notifyDataSetChanged();
                     //Log.d("LIST", "notified");
-                    Log.e("movement" , "About to Empty!");
+                  //  Log.e("movement" , "About to Empty!");
                     //i++;
                 }
 
@@ -173,7 +173,7 @@ public class MainActivity extends ActionBarActivity
 //                    startActivity(intent);
 
                     openWebViewActivity(data.newsURL);
-                    Log.e("movement" , "Item Tapped!" + itemPosition);
+                  //  Log.e("movement" , "Item Tapped!" + itemPosition);
                 }
             });
 
@@ -352,7 +352,7 @@ public class MainActivity extends ActionBarActivity
                     break;
             }
 
-            Log.e("Next","Next Button On Click");
+           // Log.e("Next","Next Button On Click");
         }
         else if(id == R.id.action_refresh)
         {
@@ -378,7 +378,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     public void onGetJsonListener(String result) {
-        Log.e("JSON",result);
+      //  Log.e("JSON",result);
         al.clear();
         JSONObject json = null; // convert String to JSONObject
         JSONArray articles;
@@ -388,7 +388,7 @@ public class MainActivity extends ActionBarActivity
             articles = json.getJSONArray("result"); // get articles array
 
             articles.length(); // --> 2
-            Log.e("LENGTH AMK",Integer.toString(articles.length()));
+          //  Log.e("LENGTH",Integer.toString(articles.length()));
 
 
 
@@ -402,7 +402,7 @@ public class MainActivity extends ActionBarActivity
                  // Log.e("IS READ",reads.get(h) + "  " +articles.getJSONObject(i).getString("newsID") );
                   if(reads.get(h).equals( articles.getJSONObject(i).getString("newsID")))   // Checking if it has been read already.
                   {
-                      Log.e("Read size",Integer.toString(reads.size()));
+                     // Log.e("Read size",Integer.toString(reads.size()));
                       isThere= true;
                   }
               }

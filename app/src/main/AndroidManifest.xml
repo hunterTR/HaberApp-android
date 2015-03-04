@@ -26,7 +26,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".WebViewActivity" />
+        <activity android:name=".WebViewActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+        />
 
         <activity android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"

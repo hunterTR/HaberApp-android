@@ -59,5 +59,11 @@ public class WebViewActivity extends ActionBarActivity {
             v.loadUrl(url);
             return true;
         }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            // do your stuff here
+
+        }
     }
 }

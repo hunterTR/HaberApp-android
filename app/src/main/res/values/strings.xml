@@ -8,6 +8,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Sıradaki</string>
+    <string name="action_refresh">Yenile</string>
     <string name="action_settings">Settings</string>
+    <string name="banner_ad_unit_id">ca-app-pub-8321218408642451/5609989425</string>
 
 </resources>

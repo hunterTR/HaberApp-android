@@ -19,12 +19,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Window;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import com.squareup.picasso.Picasso;
 
@@ -44,12 +48,15 @@ public class MainActivity extends ActionBarActivity
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private ArrayList<CardModel> al;
+    private ArrayList<String> reads;
     private CardAdapter cardAdapter;
     HttpRequestTest request;
     SwipeFlingAdapterView flingContainer;
     NewsSourceFragment newsSourceFragment;
     CategoriesFragment categoriesFragment;
     TinyDB tinydb;
+    private Menu optionsMenu;
+
     private int i;
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
@@ -59,10 +66,15 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_main);
         request = new HttpRequestTest(this);
         request.jsonListener = this;
         tinydb = new TinyDB(this);
+        reads = tinydb.getList("reads");
+
+
+
 
         newsSourceFragment = new NewsSourceFragment();
         categoriesFragment = new CategoriesFragment();
@@ -92,10 +104,6 @@ public class MainActivity extends ActionBarActivity
 
 
 
-
-
-
-
           //  arrayAdapter = new ArrayAdapter<>(this, R.layout.item, R.id.helloText, al );
 
             cardAdapter = new CardAdapter(this,R.layout.item,al);
@@ -117,15 +125,17 @@ public class MainActivity extends ActionBarActivity
                     //You also have access to the original object.
                     //If you want to use it just cast it (String) dataObject
                    // makeToast(this, "Left!");
-                    Log.e("movement" , "Left!");
+                    CardModel test =(CardModel)dataObject;
+                    reads.add(test.newsID);
+                    Log.e("movement" , "Left!" + test.newsID);
                 }
 
                 @Override
                 public void onRightCardExit(Object dataObject) {
                    // makeToast(this, "Right!");
                     CardModel test =(CardModel)dataObject;
-
-                    Log.e("movement" , "Right! " +test.imageurl);
+                    reads.add(test.newsID);
+                    Log.e("movement" , "Right! " +test.newsID);
                 }
 
                 @Override
@@ -156,12 +166,13 @@ public class MainActivity extends ActionBarActivity
                 //    makeToast(this , "Clicked!");
                     CardModel data = (CardModel)dataObject;
                     Uri uri = Uri.parse(data.newsURL);
-                   Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+               //    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     //Intent intent;
                     //intent = new Intent(this, WebViewActivity.class);
 
-                    startActivity(intent);
+//                    startActivity(intent);
 
+                    openWebViewActivity(data.newsURL);
                     Log.e("movement" , "Item Tapped!" + itemPosition);
                 }
             });
@@ -190,9 +201,25 @@ public class MainActivity extends ActionBarActivity
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tinydb.putList("reads",reads);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        tinydb.putList("reads",reads);
+    }
 
 
-
+    public void openWebViewActivity(String webviewURL)
+    {
+        Intent i = new Intent(this, WebViewActivity.class);
+        i.putExtra("url", webviewURL);
+        startActivity(i);
+    }
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
@@ -255,6 +282,20 @@ public class MainActivity extends ActionBarActivity
         actionBar.setTitle(mTitle);
     }
 
+    public void setRefreshActionButtonState(final boolean refreshing) {
+        if (optionsMenu != null) {
+            final MenuItem refreshItem = optionsMenu
+                    .findItem(R.id.action_refresh);
+            if (refreshItem != null) {
+                if (refreshing) {
+                    refreshItem.setActionView(R.layout.actionbar_indeterminate_progress);
+                } else {
+                    refreshItem.setActionView(null);
+                }
+            }
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -262,7 +303,9 @@ public class MainActivity extends ActionBarActivity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
+            this.optionsMenu = menu;
             getMenuInflater().inflate(R.menu.main, menu);
+
             restoreActionBar();
             return true;
         }
@@ -274,6 +317,7 @@ public class MainActivity extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -310,6 +354,11 @@ public class MainActivity extends ActionBarActivity
 
             Log.e("Next","Next Button On Click");
         }
+        else if(id == R.id.action_refresh)
+        {
+           // setRefreshActionButtonState(true);
+            request.test();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -330,7 +379,7 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onGetJsonListener(String result) {
         Log.e("JSON",result);
-
+        al.clear();
         JSONObject json = null; // convert String to JSONObject
         JSONArray articles;
         try {
@@ -340,18 +389,34 @@ public class MainActivity extends ActionBarActivity
 
             articles.length(); // --> 2
             Log.e("LENGTH AMK",Integer.toString(articles.length()));
+
+
+
           for(int i = 0 ; i < articles.length() ; i++)
           {
               ImageView tmp = new ImageView(this);
+              boolean isThere = false;
+              for(int h = 0 ; h < reads.size() ; h++)
+              {
 
-                al.add(new CardModel(articles.getJSONObject(i).getString("title"),articles.getJSONObject(i).getString("image"),articles.getJSONObject(i).getString("url")));
+                 // Log.e("IS READ",reads.get(h) + "  " +articles.getJSONObject(i).getString("newsID") );
+                  if(reads.get(h).equals( articles.getJSONObject(i).getString("newsID")))   // Checking if it has been read already.
+                  {
+                      Log.e("Read size",Integer.toString(reads.size()));
+                      isThere= true;
+                  }
+              }
+              if(!isThere)  // if it is then don't add to arraylist.
+              al.add(new CardModel(articles.getJSONObject(i).getString("title"),articles.getJSONObject(i).getString("image"),
+                      articles.getJSONObject(i).getString("url"),articles.getJSONObject(i).getString("newsID")));
+
           }
 
             cardAdapter.notifyDataSetChanged();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        setRefreshActionButtonState(false);
 
     }
 
@@ -387,6 +452,9 @@ public class MainActivity extends ActionBarActivity
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
 
+            AdView mAdView = (AdView) rootView.findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
 
             return rootView;
         }

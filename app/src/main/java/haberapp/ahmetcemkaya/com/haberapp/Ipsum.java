@@ -25,7 +25,9 @@ public class Ipsum {
             "NTV",
             "Diken",
             "odaTV",
-            "(IFL)I Fucking Love Science"
+            "(IFL)I Fucking Love Science",
+            "Zaytung",
+            "HaberApp Özel"
 
     };
     static String[] Categories = {

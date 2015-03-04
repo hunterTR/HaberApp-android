@@ -136,6 +136,9 @@ public class NewsSourceFragment extends ListFragment {
         }
         tinydb.putList("sources", positionList);
 
+        for(int i = 0 ; i < positionList.size(); i++)
+            Log.e("position",positionList.get(i).toString());
+
         callback.onSourceSelected(position);
     }
 

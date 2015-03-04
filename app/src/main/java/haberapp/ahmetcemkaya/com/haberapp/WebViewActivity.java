@@ -12,18 +12,39 @@ import android.webkit.WebViewClient;
 /**
  * Created by cem.kaya on 03.03.2015.
  */
-public class WebViewActivity extends Activity {
+public class WebViewActivity extends ActionBarActivity {
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
+        Bundle extras;
+        String url = null;
+        if(savedInstanceState == null)
+        {
+            extras = getIntent().getExtras();
+
+            if(extras !=null) {
+                url = extras.getString("url");
+            }
+        }
+        else
+        {
+            url = (String) savedInstanceState.getSerializable("url");
+
+        }
         WebView myWebView = (WebView) findViewById(R.id.webView);
         WebSettings webSettings = myWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setUseWideViewPort(true);
         myWebView.setWebViewClient(new NewsWebViewClient());
+        //myWebView.setWebViewClient(new NewsWebViewClient());
+        if(url != null)
+        myWebView.loadUrl(url);
+        else
+        myWebView.loadUrl("http://www.haberapp.net");
 
     }
 
@@ -31,15 +52,11 @@ public class WebViewActivity extends Activity {
 
 
     private class NewsWebViewClient extends WebViewClient {
+
         @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (Uri.parse(url).getHost().equals("http://www.ntv.com.tr")) {
-                // This is my web site, so do not override; let my WebView load the page
-                return false;
-            }
-            // Otherwise, the link is not for a page on my site, so launch another Activity that handles URLs
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intent);
+        public boolean shouldOverrideUrlLoading(WebView v, String url)
+        {
+            v.loadUrl(url);
             return true;
         }
     }

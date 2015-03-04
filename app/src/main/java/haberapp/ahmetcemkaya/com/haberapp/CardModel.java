@@ -12,13 +12,15 @@ public class CardModel {
     public String title;
     public String newsURL;
     public String imageurl;
+    public String newsID;
 
 
-    public CardModel(String modelTitle,String imageUrl, String newsurl)
+    public CardModel(String modelTitle,String imageUrl, String newsurl,String newsid)
     {
         newsURL = newsurl;
         imageurl = imageUrl;
         title = modelTitle;
+        newsID = newsid;
     }
 
 

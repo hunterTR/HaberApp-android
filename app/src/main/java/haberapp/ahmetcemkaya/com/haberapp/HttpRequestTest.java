@@ -52,6 +52,8 @@ public class HttpRequestTest {
 
     public void updateConstraints()
     {
+        categories.clear();
+        sources.clear();
        ArrayList<String> categoriesList =  tinydb.getList("categories");
        ArrayList<String> sourceList = tinydb.getList("sources");
 
@@ -121,6 +123,13 @@ public class HttpRequestTest {
                 case "8":
                     sources.add("ifl");
                     break;
+                case "9":
+                    sources.add("zaytung");
+                    break;
+                case "10":
+                    sources.add("haberapp");
+                    break;
+
             }
         }
     }
@@ -175,6 +184,8 @@ public class HttpRequestTest {
 
     public void test()
     {
+        ((MainActivity) main).setRefreshActionButtonState(true);
+        updateConstraints();
         new HttpAsyncTask().execute("http://178.62.245.125:3000/testGetNewsByPost");
     }
 

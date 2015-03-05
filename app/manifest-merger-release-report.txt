@@ -65,16 +65,20 @@ ADDED from AndroidManifest.xml:25:17
 		ADDED from AndroidManifest.xml:25:27
 activity#haberapp.ahmetcemkaya.com.haberapp.WebViewActivity
 ADDED from AndroidManifest.xml:29:9
+	android:screenOrientation
+		ADDED from AndroidManifest.xml:31:13
+	android:configChanges
+		ADDED from AndroidManifest.xml:30:13
 	android:name
 		ADDED from AndroidManifest.xml:29:19
 activity#com.google.android.gms.ads.AdActivity
-ADDED from AndroidManifest.xml:31:9
+ADDED from AndroidManifest.xml:34:9
 	android:configChanges
-		ADDED from AndroidManifest.xml:32:13
+		ADDED from AndroidManifest.xml:35:13
 	android:theme
-		ADDED from AndroidManifest.xml:33:13
+		ADDED from AndroidManifest.xml:36:13
 	android:name
-		ADDED from AndroidManifest.xml:31:19
+		ADDED from AndroidManifest.xml:34:19
 uses-sdk
 INJECTED from AndroidManifest.xml:0:0 reason: use-sdk injection requested
 MERGED from com.android.support:appcompat-v7:21.0.3:15:5

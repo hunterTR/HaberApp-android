@@ -197,6 +197,7 @@ public class MainActivity extends ActionBarActivity
                     .commit();
 
             flingContainer.setVisibility(View.VISIBLE);
+            request.test();
         }
 
     }
@@ -247,6 +248,7 @@ public class MainActivity extends ActionBarActivity
                 swapFragment=PlaceholderFragment.newInstance(position + 1);
                 tinydb.putString("currentView","news");
                 flingContainer.setVisibility(View.VISIBLE);
+                request.test();
             }
                 break;
         }

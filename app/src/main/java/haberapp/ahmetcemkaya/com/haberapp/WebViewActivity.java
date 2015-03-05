@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -63,7 +64,8 @@ public class WebViewActivity extends ActionBarActivity {
         @Override
         public void onPageFinished(WebView view, String url) {
             // do your stuff here
-
+          view.setVisibility(View.VISIBLE);
+            findViewById(R.id.progress_bar_webview).setVisibility(View.INVISIBLE);
         }
     }
 }

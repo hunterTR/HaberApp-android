@@ -77,7 +77,7 @@ public class HttpRequestTest {
                     categories.add("magazin");
                     break;
                 case "5":
-                    categories.add("tops");
+                    categories.add("gundem");
                     break;
                 case "6":
                     categories.add("education");
@@ -87,6 +87,12 @@ public class HttpRequestTest {
                     break;
                 case "8":
                     categories.add("science");
+                    break;
+                case "9":
+                    categories.add("health");
+                    break;
+                case "10":
+                    categories.add("art");
                     break;
 
             }
@@ -124,9 +130,12 @@ public class HttpRequestTest {
                     sources.add("ifl");
                     break;
                 case "9":
-                    sources.add("zaytung");
+                    sources.add("sozcu");
                     break;
                 case "10":
+                    sources.add("amk");
+                    break;
+                case "11":
                     sources.add("haberapp");
                     break;
 

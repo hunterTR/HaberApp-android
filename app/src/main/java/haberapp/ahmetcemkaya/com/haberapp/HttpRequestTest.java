@@ -136,6 +136,9 @@ public class HttpRequestTest {
                     sources.add("amk");
                     break;
                 case "11":
+                    sources.add("eurosport");
+                    break;
+                case "12":
                     sources.add("haberapp");
                     break;
 
@@ -195,7 +198,7 @@ public class HttpRequestTest {
     {
         ((MainActivity) main).setRefreshActionButtonState(true);
         updateConstraints();
-        new HttpAsyncTask().execute("http://178.62.245.125:3000/testGetNewsByPost");
+        new HttpAsyncTask().execute("http://188.166.4.245:3000/testGetNewsByPost");
     }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
@@ -227,7 +230,7 @@ public class HttpRequestTest {
         // onPostExecute displays the results of the AsyncTask.
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(main,"Recieved!", Toast.LENGTH_LONG).show();
+           // Toast.makeText(main,"Recieved!", Toast.LENGTH_LONG).show();
             jsonListener.onGetJsonListener(result);
         }
     }

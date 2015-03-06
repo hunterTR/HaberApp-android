@@ -347,7 +347,7 @@ public class MainActivity extends ActionBarActivity
                             .commit();
                     flingContainer.setVisibility(View.VISIBLE);
                     getSupportActionBar().setTitle("Haberler");
-
+                    request.test();
                     break;
                 case "news":
                 //Change the card.
@@ -355,11 +355,14 @@ public class MainActivity extends ActionBarActivity
             }
 
            // Log.e("Next","Next Button On Click");
+            return true;
         }
         else if(id == R.id.action_refresh)
         {
            // setRefreshActionButtonState(true);
             request.test();
+
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -452,7 +455,6 @@ public class MainActivity extends ActionBarActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
 
             AdView mAdView = (AdView) rootView.findViewById(R.id.adView);
             AdRequest adRequest = new AdRequest.Builder().build();

@@ -28,6 +28,7 @@ public class Ipsum {
             "(IFL)I Fucking Love Science",
             "Sözcü",
             "AMK Spor",
+            "EuroSport",
             "HaberApp Özel"
 
     };

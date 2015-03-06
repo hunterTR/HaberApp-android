@@ -1,27 +1,41 @@
 package haberapp.ahmetcemkaya.com.haberapp;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.ClipboardManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 /**
  * Created by cem.kaya on 03.03.2015.
  */
 public class WebViewActivity extends ActionBarActivity {
 
-
+    String url = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
         Bundle extras;
-        String url = null;
+
+
+        AdView mAdView = (AdView) findViewById(R.id.adViewWeb);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
         if(savedInstanceState == null)
         {
             extras = getIntent().getExtras();
@@ -40,6 +54,7 @@ public class WebViewActivity extends ActionBarActivity {
         webSettings.setJavaScriptEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
+        webSettings.setBuiltInZoomControls(true);
         myWebView.setWebViewClient(new NewsWebViewClient());
         //myWebView.setWebViewClient(new NewsWebViewClient());
         if(url != null)
@@ -49,7 +64,30 @@ public class WebViewActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
+
+        getMenuInflater().inflate(R.menu.webview, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+if(id == R.id.action_copy)
+{
+    ClipboardManager ClipMan = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+    ClipMan.setText(url);
+     Toast info = Toast.makeText(this,"Haber linki kopyalandı",Toast.LENGTH_SHORT);
+     info.show();
+}
+        return super.onOptionsItemSelected(item);
+
+    }
 
 
     private class NewsWebViewClient extends WebViewClient {
@@ -65,6 +103,7 @@ public class WebViewActivity extends ActionBarActivity {
         public void onPageFinished(WebView view, String url) {
             // do your stuff here
           view.setVisibility(View.VISIBLE);
+          findViewById(R.id.adViewWeb).setVisibility(View.INVISIBLE);
             findViewById(R.id.progress_bar_webview).setVisibility(View.INVISIBLE);
         }
     }

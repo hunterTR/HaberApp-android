@@ -19,6 +19,7 @@ public class NewsSourceFragment extends ListFragment {
     OnNewsSourceSelectedListener callback;
     ArrayList<String> positionList;
     TinyDB tinydb;
+    ListModel[] listmodeltest = {new ListModel("deneme",R.drawable.hurriyet)};
 
     public interface OnNewsSourceSelectedListener{
         public void onSourceSelected(int position);
@@ -31,6 +32,8 @@ public class NewsSourceFragment extends ListFragment {
                 1);
 
         tinydb= new TinyDB(activity);
+
+
         try
         {
             callback = (OnNewsSourceSelectedListener) activity;
@@ -73,14 +76,14 @@ public class NewsSourceFragment extends ListFragment {
 
         int layout = android.R.layout.simple_list_item_multiple_choice;
         String[] data = Ipsum.Sources;
-
+        int[] images = Ipsum.sourceImages;
         ListView v = getListView();
         if(v!=null){
             v.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         }
 
 
-        setListAdapter(new ArrayAdapter<String>(getActivity(), layout, data));
+        setListAdapter(new CustomListViewAdapter(getActivity(),R.layout.list_item,Ipsum.testo));
         // v.setItemChecked(Integer.parseInt("1"),true);
 
         positionList = tinydb.getList("sources");
@@ -107,7 +110,7 @@ public class NewsSourceFragment extends ListFragment {
     @Override
     public void onPause() {
         super.onPause();
-        tinydb.putList("sources", positionList);
+       // tinydb.putList("sources", positionList);
 
     }
 
@@ -116,7 +119,7 @@ public class NewsSourceFragment extends ListFragment {
         super.onDetach();
 
 
-        tinydb.putList("sources", positionList);
+        //tinydb.putList("sources", positionList);
     }
 
 
@@ -125,6 +128,7 @@ public class NewsSourceFragment extends ListFragment {
         if(l.isItemChecked(position) == true)
         {
             l.setItemChecked(position,true);
+
             positionList.add(Integer.toString(position));
 
         }
@@ -134,7 +138,7 @@ public class NewsSourceFragment extends ListFragment {
             positionList.remove(Integer.toString(position));
 
         }
-        tinydb.putList("sources", positionList);
+      // tinydb.putList("sources", positionList);
 
         for(int i = 0 ; i < positionList.size(); i++)
             Log.e("position",positionList.get(i).toString());

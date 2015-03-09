@@ -57,7 +57,15 @@ public class CardAdapter extends ArrayAdapter<CardModel> {
         }
 
         CardModel cardmodel = data.get(position);
-        holder.txtTitle.setText(cardmodel.title);
+        if (cardmodel.title.length() >=54)
+        { holder.txtTitle.setText(cardmodel.title);
+
+        }
+        else
+        {
+            holder.txtTitle.setText(cardmodel.title);
+        }
+
         if(cardmodel.imageurl != "null")
         {
 

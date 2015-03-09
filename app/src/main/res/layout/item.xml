@@ -13,10 +13,14 @@
         android:textColor="@android:color/holo_blue_dark"
         android:background="@drawable/textlines"
         android:gravity="center"
-        tools:text="helloworld"
+        tools:text="123456789123456789123456789123456789123456789123456789123456789"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_gravity="bottom" />
+        android:layout_gravity="bottom"
+        android:maxLines="2"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        />
 
     <RelativeLayout
         android:id="@+id/relative_container"

@@ -77,8 +77,20 @@ public class MainActivity extends ActionBarActivity
         request.jsonListener = this;
         tinydb = new TinyDB(this);
         reads = tinydb.getList("reads");
+        ArrayList<ListModel> testmodellist = new ArrayList<ListModel>();
+        ArrayList<String> positionList = tinydb.getList("sources");
+        for(int i = 0 ; i < Ipsum.listmodeltest.length ; i++ )
+        {
+            Ipsum.testo.add(Ipsum.listmodeltest[i]);
+        }
 
-//PUSHWOOSH
+        for(int i = 0 ; i < positionList.size() ; i++ )
+        {
+          Ipsum.testo.get(Integer.parseInt(positionList.get(i))).setSelected(true);
+        }
+
+
+        //PUSHWOOSH
 
         //Register receivers for push notifications
         registerReceivers();
@@ -493,9 +505,9 @@ public class MainActivity extends ActionBarActivity
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-            AdView mAdView = (AdView) rootView.findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
+           // AdView mAdView = (AdView) rootView.findViewById(R.id.adView);
+           // AdRequest adRequest = new AdRequest.Builder().build();
+           // mAdView.loadAd(adRequest);
 
             return rootView;
         }

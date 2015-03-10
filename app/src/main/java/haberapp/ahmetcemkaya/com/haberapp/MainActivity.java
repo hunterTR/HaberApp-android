@@ -55,6 +55,8 @@ public class MainActivity extends ActionBarActivity
     private ArrayList<CardModel> al;
     private ArrayList<String> reads;
     private CardAdapter cardAdapter;
+    private JSONObject newsToSave;
+    private JSONArray newsArrayToSave;
     HttpRequestTest request;
     SwipeFlingAdapterView flingContainer;
     NewsSourceFragment newsSourceFragment;
@@ -77,7 +79,10 @@ public class MainActivity extends ActionBarActivity
         request.jsonListener = this;
         tinydb = new TinyDB(this);
         reads = tinydb.getList("reads");
-        ArrayList<ListModel> testmodellist = new ArrayList<ListModel>();
+        newsToSave = new JSONObject();
+        newsArrayToSave = new JSONArray();
+
+        Log.e("saved news json",tinydb.getString("savedNews"));
         ArrayList<String> positionList = tinydb.getList("sources");
         for(int i = 0 ; i < Ipsum.listmodeltest.length ; i++ )
         {
@@ -87,6 +92,17 @@ public class MainActivity extends ActionBarActivity
         for(int i = 0 ; i < positionList.size() ; i++ )
         {
           Ipsum.testo.get(Integer.parseInt(positionList.get(i))).setSelected(true);
+        }
+
+        ArrayList<String> categoriesPositionList = tinydb.getList("categories");
+        for(int i = 0 ; i < Ipsum.categoriesarray.length ; i++ )
+        {
+            Ipsum.categoriesArrayList.add(Ipsum.categoriesarray[i]);
+        }
+
+        for(int i = 0 ; i < categoriesPositionList.size() ; i++ )
+        {
+            Ipsum.categoriesArrayList.get(Integer.parseInt(categoriesPositionList.get(i))).setSelected(true);
         }
 
 
@@ -156,7 +172,6 @@ public class MainActivity extends ActionBarActivity
                     Log.d("LIST", "removed object!");
                     al.remove(0);
                     cardAdapter.notifyDataSetChanged();
-
                 }
 
                 @Override
@@ -167,7 +182,18 @@ public class MainActivity extends ActionBarActivity
                    // makeToast(this, "Left!");
                     CardModel test =(CardModel)dataObject;
                     reads.add(test.newsID);
-                   // Log.e("movement" , "Left!" + test.newsID);
+                    JSONObject tmpJson = new JSONObject();
+                    try {
+                        tmpJson.put("title",test.title);
+                        tmpJson.put("newsID",test.newsID);
+                        tmpJson.put("url",test.newsURL);
+                        tmpJson.put("image",test.imageurl);
+                        newsArrayToSave.put(tmpJson);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Log.e("movement" , "Left!" + test.newsID);
                 }
 
                 @Override
@@ -252,6 +278,14 @@ public class MainActivity extends ActionBarActivity
     protected void onPause() {
         super.onPause();
         tinydb.putList("reads",reads);
+        JSONObject tmpJson =  new JSONObject();
+        try {
+            tmpJson.put("result",newsArrayToSave);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        tinydb.putString("savedNews",tmpJson.toString());
+
         unregisterReceivers();
     }
     @Override
@@ -293,13 +327,19 @@ public class MainActivity extends ActionBarActivity
                 }
                 break;
             case 2:
-            {
+
                 swapFragment=PlaceholderFragment.newInstance(position + 1);
                 tinydb.putString("currentView","news");
                 flingContainer.setVisibility(View.VISIBLE);
                 request.test();
-            }
+
                 break;
+            case 3:
+                swapFragment=PlaceholderFragment.newInstance(position + 1);
+                tinydb.putString("currentView","saved");
+                flingContainer.setVisibility(View.VISIBLE);
+                addCardsFromJson(tinydb.getString("savedNews"),true);
+
         }
         if(swapFragment !=null)
         {
@@ -433,45 +473,56 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onGetJsonListener(String result) {
       //  Log.e("JSON",result);
+      addCardsFromJson(result,false);
+
+    }
+
+    public void addCardsFromJson(String result,boolean isSaved)
+    {
+
         al.clear();
-        JSONObject json = null; // convert String to JSONObject
-        JSONArray articles;
-        try {
-            json = new JSONObject(result);
+        flingContainer.removeAllViewsInLayout();
+        cardAdapter.notifyDataSetChanged();
 
-            articles = json.getJSONArray("result"); // get articles array
+        if(result != null) {
 
-            articles.length(); // --> 2
-          //  Log.e("LENGTH",Integer.toString(articles.length()));
+            JSONObject json = null; // convert String to JSONObject
+            JSONArray articles;
+            try {
+                json = new JSONObject(result);
+
+                articles = json.getJSONArray("result"); // get articles array
+
+                Log.e("LENGTH", Integer.toString(articles.length())); // --> 2
+                Log.e("al length", Integer.toString(al.size())); // --> 2
 
 
+                for (int i = 0; i < articles.length(); i++) {
 
-          for(int i = 0 ; i < articles.length() ; i++)
-          {
-              ImageView tmp = new ImageView(this);
-              boolean isThere = false;
-              for(int h = 0 ; h < reads.size() ; h++)
-              {
+                    boolean isThere = false;
+                    for (int h = 0; h < reads.size(); h++) {
 
-                 // Log.e("IS READ",reads.get(h) + "  " +articles.getJSONObject(i).getString("newsID") );
-                  if(reads.get(h).equals( articles.getJSONObject(i).getString("newsID")))   // Checking if it has been read already.
-                  {
-                     // Log.e("Read size",Integer.toString(reads.size()));
-                      isThere= true;
-                  }
-              }
-              if(!isThere)  // if it is then don't add to arraylist.
-              al.add(new CardModel(articles.getJSONObject(i).getString("title"),articles.getJSONObject(i).getString("image"),
-                      articles.getJSONObject(i).getString("url"),articles.getJSONObject(i).getString("newsID")));
+                        // Log.e("IS READ",reads.get(h) + "  " +articles.getJSONObject(i).getString("newsID") );
+                        if (reads.get(h).equals(articles.getJSONObject(i).getString("newsID")) && !isSaved)   // Checking if it has been read already.
+                        {
+                            // Log.e("Read size",Integer.toString(reads.size()));
 
-          }
+                            isThere = true;
+                        }
+                    }
+                    if (!isThere)  // if it is then don't add to arraylist.
+                        al.add(new CardModel(articles.getJSONObject(i).getString("title"), articles.getJSONObject(i).getString("image"),
+                                articles.getJSONObject(i).getString("url"), articles.getJSONObject(i).getString("newsID")));
 
-            cardAdapter.notifyDataSetChanged();
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+                }
+
+                cardAdapter.notifyDataSetChanged();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            setRefreshActionButtonState(false);
         }
-        setRefreshActionButtonState(false);
-
     }
 
     /**

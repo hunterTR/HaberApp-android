@@ -40,6 +40,11 @@ public class CustomListViewAdapter extends ArrayAdapter<ListModel> {
         positionList = new ArrayList<String>();
         tinydb  = new TinyDB(context);
 
+        //Checking which fragment we are on.
+        if(listmodel.get(0).mName.equals("Hürriyet"))
+        positionList = tinydb.getList("sources");
+        else
+        positionList = tinydb.getList("categories");
     }
     @Override
     public int getCount() {
@@ -92,6 +97,8 @@ public class CustomListViewAdapter extends ArrayAdapter<ListModel> {
                                         .getTag();
                                 element.setSelected(buttonView.isChecked());
 
+
+
                             }
                         });
 
@@ -115,12 +122,30 @@ public class CustomListViewAdapter extends ArrayAdapter<ListModel> {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                ListModel data = Ipsum.testo.get(position);
-                finalHolder1.checkbox.setChecked(!data.isSelected());
-                Ipsum.testo.get(position).setSelected(!data.isSelected());
-                Log.e("selected :",Integer.toString(position));
-                positionList.add(Integer.toString(position));
-                tinydb.putList("sources",positionList);
+
+                ListModel data = listmodelarraylist.get(position);
+                boolean b = data.isSelected();
+                finalHolder1.checkbox.setChecked(!b);
+                listmodelarraylist.get(position).setSelected(!b);
+
+                if(b == false)
+                {
+
+                    positionList.add(Integer.toString(position));
+                    Log.e("selected :",Integer.toString(position));
+                }
+                else
+                {
+                    positionList.remove(Integer.toString(position));
+                }
+
+                //Checking which fragment we are on.
+                if(listmodelarraylist.get(0).mName.equals("Hürriyet"))
+                    tinydb.putList("sources",positionList);
+                else
+                    tinydb.putList("categories",positionList);
+
+
 
             }
         });

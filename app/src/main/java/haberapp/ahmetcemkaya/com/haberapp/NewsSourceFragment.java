@@ -15,11 +15,12 @@ import java.util.ArrayList;
 /**
  * Created by ahmetcem on 21.2.2015.
  */
+
 public class NewsSourceFragment extends ListFragment {
     OnNewsSourceSelectedListener callback;
     ArrayList<String> positionList;
     TinyDB tinydb;
-    ListModel[] listmodeltest = {new ListModel("deneme",R.drawable.hurriyet)};
+   // ListModel[] listmodeltest = {new ListModel("deneme",R.drawable.hurriyet)};
 
     public interface OnNewsSourceSelectedListener{
         public void onSourceSelected(int position);
@@ -74,9 +75,9 @@ public class NewsSourceFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        int layout = android.R.layout.simple_list_item_multiple_choice;
-        String[] data = Ipsum.Sources;
-        int[] images = Ipsum.sourceImages;
+     //   int layout = android.R.layout.simple_list_item_multiple_choice;
+       // String[] data = Ipsum.Sources;
+
         ListView v = getListView();
         if(v!=null){
             v.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
@@ -85,6 +86,7 @@ public class NewsSourceFragment extends ListFragment {
 
         setListAdapter(new CustomListViewAdapter(getActivity(),R.layout.list_item,Ipsum.testo));
         // v.setItemChecked(Integer.parseInt("1"),true);
+
 
         positionList = tinydb.getList("sources");
         for(int i = 0 ; i < positionList.size() ; i++ )

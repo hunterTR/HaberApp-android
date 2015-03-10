@@ -77,8 +77,8 @@ public class CategoriesFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        int layout = android.R.layout.simple_list_item_multiple_choice;
-        String[] data = Ipsum.Categories;
+      //  int layout = android.R.layout.simple_list_item_multiple_choice;
+       // String[] data = Ipsum.Categories;
 
         ListView v = getListView();
         if(v!=null){
@@ -86,10 +86,10 @@ public class CategoriesFragment extends ListFragment {
         }
 
 
-        setListAdapter(new ArrayAdapter<String>(getActivity(), layout, data));
+        setListAdapter(new CustomListViewAdapter(getActivity(),R.layout.list_item,Ipsum.categoriesArrayList));
        // v.setItemChecked(Integer.parseInt("1"),true);
 
-        positionList = tinydb.getList("categories");
+       /* positionList = tinydb.getList("categories");
         for(int i = 0 ; i < positionList.size() ; i++ )
         {
             Log.e("position",positionList.get(i));
@@ -97,7 +97,7 @@ public class CategoriesFragment extends ListFragment {
         }
 
 
-
+*/
     }
 
     @Override
@@ -113,7 +113,7 @@ public class CategoriesFragment extends ListFragment {
     @Override
     public void onPause() {
         super.onPause();
-        tinydb.putList("categories", positionList);
+       // tinydb.putList("categories", positionList);
 
     }
 
@@ -122,7 +122,7 @@ public class CategoriesFragment extends ListFragment {
         super.onDetach();
 
 
-        tinydb.putList("categories", positionList);
+       // tinydb.putList("categories", positionList);
     }
 
 
@@ -131,16 +131,16 @@ public class CategoriesFragment extends ListFragment {
         if(l.isItemChecked(position) == true)
         {
             l.setItemChecked(position,true);
-            positionList.add(Integer.toString(position));
+          //  positionList.add(Integer.toString(position));
 
         }
         else
         {
             l.setItemChecked(position, false);
-            positionList.remove(Integer.toString(position));
+            //positionList.remove(Integer.toString(position));
 
         }
-        tinydb.putList("categories", positionList);
+        //tinydb.putList("categories", positionList);
 
         callback.onCategorySelected(position);
     }

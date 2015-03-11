@@ -95,8 +95,7 @@ public class CustomListViewAdapter extends ArrayAdapter<ListModel> {
                                                          boolean isChecked) {
                                 ListModel element = (ListModel) finalHolder.checkbox
                                         .getTag();
-                                element.setSelected(buttonView.isChecked());
-
+                              //  element.setSelected(buttonView.isChecked());
 
 
                             }
@@ -111,7 +110,40 @@ public class CustomListViewAdapter extends ArrayAdapter<ListModel> {
                 ((Holder) row.getTag()).checkbox.setTag(listmodelarraylist.get(position));
             }
 
-            ListModel data = listmodelarraylist.get(position);
+        final Holder finalHolder2 = holder;
+        holder.checkbox.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ListModel data = listmodelarraylist.get(position);
+                boolean b = data.isSelected();
+                //finalHolder2.checkbox.setChecked(!b);
+                listmodelarraylist.get(position).setSelected(!b);
+
+                if(b == false)
+                {
+
+                    positionList.add(Integer.toString(position));
+                    Log.e("selected :",Integer.toString(position));
+                }
+                else
+                {
+                    positionList.remove(Integer.toString(position));
+                }
+
+                //Checking which fragment we are on.
+                if(listmodelarraylist.get(0).mName.equals("Hürriyet"))
+                    tinydb.putList("sources",positionList);
+                else
+                    tinydb.putList("categories",positionList);
+
+
+            }
+        });
+
+
+
+        ListModel data = listmodelarraylist.get(position);
             holder.text.setText(data.mName);
             holder.image.setImageResource(data.mImageID);
             holder.checkbox.setChecked(data.isSelected());

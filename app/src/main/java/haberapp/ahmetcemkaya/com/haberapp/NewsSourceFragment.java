@@ -88,14 +88,14 @@ public class NewsSourceFragment extends ListFragment {
         // v.setItemChecked(Integer.parseInt("1"),true);
 
 
-        positionList = tinydb.getList("sources");
+  /*      positionList = tinydb.getList("sources");
         for(int i = 0 ; i < positionList.size() ; i++ )
         {
             Log.e("position", positionList.get(i));
             v.setItemChecked(Integer.parseInt(positionList.get(i)),true);
         }
 
-
+*/
 
     }
 
@@ -127,7 +127,7 @@ public class NewsSourceFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        if(l.isItemChecked(position) == true)
+   /*     if(l.isItemChecked(position) == true)
         {
             l.setItemChecked(position,true);
 
@@ -144,7 +144,7 @@ public class NewsSourceFragment extends ListFragment {
 
         for(int i = 0 ; i < positionList.size(); i++)
             Log.e("position",positionList.get(i).toString());
-
+*/
         callback.onSourceSelected(position);
     }
 

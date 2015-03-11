@@ -79,11 +79,22 @@ public class MainActivity extends ActionBarActivity
         request.jsonListener = this;
         tinydb = new TinyDB(this);
         reads = tinydb.getList("reads");
-        newsToSave = new JSONObject();
         newsArrayToSave = new JSONArray();
+
+        String tmpJson = tinydb.getString("savedNews");
+        if (tmpJson != null) {
+            try {
+                newsToSave = new JSONObject(tmpJson);
+                newsArrayToSave = newsToSave.getJSONArray("result");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         Log.e("saved news json",tinydb.getString("savedNews"));
         ArrayList<String> positionList = tinydb.getList("sources");
+
         for(int i = 0 ; i < Ipsum.listmodeltest.length ; i++ )
         {
             Ipsum.testo.add(Ipsum.listmodeltest[i]);
@@ -169,7 +180,7 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public void removeFirstObjectInAdapter() {
                     // this is the simplest way to delete an object from the Adapter (/AdapterView)
-                    Log.d("LIST", "removed object!");
+                //    Log.d("LIST", "removed object!");
                     al.remove(0);
                     cardAdapter.notifyDataSetChanged();
                 }
@@ -183,16 +194,21 @@ public class MainActivity extends ActionBarActivity
                     CardModel test =(CardModel)dataObject;
                     reads.add(test.newsID);
                     JSONObject tmpJson = new JSONObject();
-                    try {
-                        tmpJson.put("title",test.title);
-                        tmpJson.put("newsID",test.newsID);
-                        tmpJson.put("url",test.newsURL);
-                        tmpJson.put("image",test.imageurl);
-                        newsArrayToSave.put(tmpJson);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    if(!tinydb.getString("currentView").equals("saved"))   // if we are not on saved news view then we can add the card to array
+                    {
+                        try {
+                            tmpJson.put("title", test.title);
+                            tmpJson.put("newsID", test.newsID);
+                            tmpJson.put("url", test.newsURL);
+                            tmpJson.put("image", test.imageurl);
+                            tmpJson.put("content",test.mContent);
+                            newsArrayToSave.put(tmpJson);
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        putSavedNews();
+                    }
                     // Log.e("movement" , "Left!" + test.newsID);
                 }
 
@@ -201,6 +217,15 @@ public class MainActivity extends ActionBarActivity
                    // makeToast(this, "Right!");
                     CardModel test =(CardModel)dataObject;
                     reads.add(test.newsID);
+                    if(tinydb.getString("currentView").equals("saved"))   // if we are on saved news view then we can remove the card from array
+                    {
+                      newsArrayToSave = RemoveJSONArray(newsArrayToSave,test.newsID);
+
+                   //     Log.e("movement" , "Right! " +newsArrayToSave.length());
+                        putSavedNews();
+                    }
+                   // Log.e("movement" , "Right! " +tinydb.getString("currentView"));
+
                  //   Log.e("movement" , "Right! " +test.newsID);
                 }
 
@@ -217,9 +242,9 @@ public class MainActivity extends ActionBarActivity
                 @Override
                 public void onScroll(float scrollProgressPercent) {
 
-                   // view.findViewById(R.id.item_swipe_right_indicator).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
-                   // view.findViewById(R.id.item_swipe_left_indicator).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
-
+                    View view = flingContainer.getSelectedView();
+                    view.findViewById(R.id.item_swipe_right_indicator).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
+                    view.findViewById(R.id.item_swipe_left_indicator).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
                 }
 
             });
@@ -238,10 +263,11 @@ public class MainActivity extends ActionBarActivity
 
 //                    startActivity(intent);
 
-                    openWebViewActivity(data.newsURL);
+                    openWebViewActivity(data.newsURL,data.mContent);
                   //  Log.e("movement" , "Item Tapped!" + itemPosition);
                 }
             });
+
 
 
             flingContainer.setVisibility(View.GONE);
@@ -278,14 +304,7 @@ public class MainActivity extends ActionBarActivity
     protected void onPause() {
         super.onPause();
         tinydb.putList("reads",reads);
-        JSONObject tmpJson =  new JSONObject();
-        try {
-            tmpJson.put("result",newsArrayToSave);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        tinydb.putString("savedNews",tmpJson.toString());
-
+        putSavedNews();
         unregisterReceivers();
     }
     @Override
@@ -294,14 +313,38 @@ public class MainActivity extends ActionBarActivity
         registerReceivers();
     }
 
+    public void putSavedNews()
+    {
+        JSONObject tmpJson =  new JSONObject();
+        try {
+            tmpJson.put("result",newsArrayToSave);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        tinydb.putString("savedNews",tmpJson.toString());
+    }
+
+    public JSONArray RemoveJSONArray( JSONArray jarray,String newsid) {
+
+        JSONArray Njarray=new JSONArray();
+
+        try{
+            for(int i=0;i<jarray.length();i++){
+                String tmpnewsID = jarray.getJSONObject(i).getString("newsID");
+                if(!tmpnewsID.equals(newsid))
+                    Njarray.put(jarray.get(i));
+            }
+        }catch (Exception e){e.printStackTrace();}
+        return Njarray;
+
+    }
 
 
-
-
-    public void openWebViewActivity(String webviewURL)
+    public void openWebViewActivity(String webviewURL,String content)
     {
         Intent i = new Intent(this, WebViewActivity.class);
         i.putExtra("url", webviewURL);
+        i.putExtra("content",content);
         startActivity(i);
     }
     @Override
@@ -339,7 +382,7 @@ public class MainActivity extends ActionBarActivity
                 tinydb.putString("currentView","saved");
                 flingContainer.setVisibility(View.VISIBLE);
                 addCardsFromJson(tinydb.getString("savedNews"),true);
-
+                getSupportActionBar().setTitle("Saklanan Haberler");
         }
         if(swapFragment !=null)
         {
@@ -363,6 +406,8 @@ public class MainActivity extends ActionBarActivity
             case 3:
                 mTitle = getString(R.string.title_section3);
                 break;
+            case 4:
+                mTitle="Saklanan Haberler";
         }
     }
 
@@ -436,6 +481,7 @@ public class MainActivity extends ActionBarActivity
                             .commit();
                     flingContainer.setVisibility(View.VISIBLE);
                     getSupportActionBar().setTitle("Haberler");
+
                     request.test();
                     break;
                 case "news":
@@ -449,6 +495,7 @@ public class MainActivity extends ActionBarActivity
         else if(id == R.id.action_refresh)
         {
            // setRefreshActionButtonState(true);
+            if(!tinydb.getString("currentView").equals("saved"))
             request.test();
 
             return true;
@@ -493,8 +540,8 @@ public class MainActivity extends ActionBarActivity
 
                 articles = json.getJSONArray("result"); // get articles array
 
-                Log.e("LENGTH", Integer.toString(articles.length())); // --> 2
-                Log.e("al length", Integer.toString(al.size())); // --> 2
+               // Log.e("LENGTH", Integer.toString(articles.length())); // --> 2
+             //   Log.e("al length", Integer.toString(al.size())); // --> 2
 
 
                 for (int i = 0; i < articles.length(); i++) {
@@ -512,7 +559,7 @@ public class MainActivity extends ActionBarActivity
                     }
                     if (!isThere)  // if it is then don't add to arraylist.
                         al.add(new CardModel(articles.getJSONObject(i).getString("title"), articles.getJSONObject(i).getString("image"),
-                                articles.getJSONObject(i).getString("url"), articles.getJSONObject(i).getString("newsID")));
+                                articles.getJSONObject(i).getString("url"), articles.getJSONObject(i).getString("newsID"),articles.getJSONObject(i).getString("content")));
 
 
                 }

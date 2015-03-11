@@ -14,6 +14,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -25,16 +26,20 @@ import com.google.android.gms.ads.AdView;
 public class WebViewActivity extends ActionBarActivity {
 
     String url = null;
+    String description = null;
+    TextView descriptionText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
         Bundle extras;
 
+        descriptionText = (TextView)findViewById(R.id.descriptionText);
 
         AdView mAdView = (AdView) findViewById(R.id.adViewWeb);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
 
         if(savedInstanceState == null)
         {
@@ -42,12 +47,13 @@ public class WebViewActivity extends ActionBarActivity {
 
             if(extras !=null) {
                 url = extras.getString("url");
+                description = extras.getString("content");
             }
         }
         else
         {
             url = (String) savedInstanceState.getSerializable("url");
-
+            description = (String) savedInstanceState.getSerializable("content");
         }
         WebView myWebView = (WebView) findViewById(R.id.webView);
         WebSettings webSettings = myWebView.getSettings();
@@ -56,11 +62,17 @@ public class WebViewActivity extends ActionBarActivity {
         webSettings.setUseWideViewPort(true);
         webSettings.setBuiltInZoomControls(true);
         myWebView.setWebViewClient(new NewsWebViewClient());
-        //myWebView.setWebViewClient(new NewsWebViewClient());
+
         if(url != null)
         myWebView.loadUrl(url);
         else
         myWebView.loadUrl("http://www.haberapp.net");
+
+        if(description != null)
+            descriptionText.setText(description);
+        else
+            myWebView.loadUrl("http://www.haberapp.net");
+
 
     }
 
@@ -102,9 +114,10 @@ if(id == R.id.action_copy)
         @Override
         public void onPageFinished(WebView view, String url) {
             // do your stuff here
-          view.setVisibility(View.VISIBLE);
-          findViewById(R.id.adViewWeb).setVisibility(View.INVISIBLE);
+            view.setVisibility(View.VISIBLE);
+            findViewById(R.id.adViewWeb).setVisibility(View.INVISIBLE);
             findViewById(R.id.progress_bar_webview).setVisibility(View.INVISIBLE);
+            findViewById(R.id.descriptionText).setVisibility(View.INVISIBLE);
         }
     }
 }

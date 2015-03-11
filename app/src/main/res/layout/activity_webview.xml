@@ -19,10 +19,10 @@
     <ProgressBar
         android:id="@+id/progress_bar_webview"
         style="?android:attr/progressBarStyleLarge"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:visibility="visible"
-        android:layout_centerVertical="true"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
 
@@ -35,5 +35,17 @@
             ads:adSize="BANNER"
             ads:adUnitId="@string/banner_ad_unit_id">
         </com.google.android.gms.ads.AdView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HaberHaberHaberHaberHaberHaber"
+            android:id="@+id/descriptionText"
+            android:textSize="22sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:maxLines="8"
+            android:scrollHorizontally="true"
+            android:ellipsize="end"/>
     </RelativeLayout>
 </LinearLayout>

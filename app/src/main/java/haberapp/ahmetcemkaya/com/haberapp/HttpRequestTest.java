@@ -94,6 +94,9 @@ public class HttpRequestTest {
                 case "10":
                     categories.add("art");
                     break;
+                case "11":
+                    categories.add("gaming");
+                    break;
 
             }
         }
@@ -139,6 +142,21 @@ public class HttpRequestTest {
                     sources.add("eurosport");
                     break;
                 case "12":
+                    sources.add("bbcturk");
+                    break;
+                case "13":
+                    sources.add("aljazeera");
+                    break;
+                case "14":
+                    sources.add("gamespot");
+                    break;
+                case "15":
+                    sources.add("ign");
+                    break;
+                case "16":
+                    sources.add("kotaku");
+                    break;
+                case "17":
                     sources.add("haberapp");
                     break;
 

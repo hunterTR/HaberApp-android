@@ -273,7 +273,7 @@ public class MainActivity extends ActionBarActivity
             flingContainer.setVisibility(View.GONE);
 }
         // change fragment;
-        if(tinydb.getList("sources").size() <=0)
+        if(tinydb.getList("sources").size() <=0)   // If user hasn't selected news source before.
         {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
@@ -287,7 +287,7 @@ public class MainActivity extends ActionBarActivity
             fragmentManager.beginTransaction()
                     .replace(R.id.container,PlaceholderFragment.newInstance(1))
                     .commit();
-
+            tinydb.putString("currentView","news");
             flingContainer.setVisibility(View.VISIBLE);
             request.test();
         }
@@ -405,6 +405,7 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
+                tinydb.putString("currentView","news");
                 break;
             case 4:
                 mTitle="Saklanan Haberler";
@@ -557,9 +558,20 @@ public class MainActivity extends ActionBarActivity
                             isThere = true;
                         }
                     }
-                    if (!isThere)  // if it is then don't add to arraylist.
+                    if (!isThere)  // if it is not then add it to arraylist.
+                    {
+                        String content = null;
+
+                        content = articles.getJSONObject(i).getString("content");
+                        Log.e("CONTENT",content);
+                        if (content == null)
+                            content = "Yükleniyor...";
+
+
                         al.add(new CardModel(articles.getJSONObject(i).getString("title"), articles.getJSONObject(i).getString("image"),
-                                articles.getJSONObject(i).getString("url"), articles.getJSONObject(i).getString("newsID"),articles.getJSONObject(i).getString("content")));
+                                articles.getJSONObject(i).getString("url"), articles.getJSONObject(i).getString("newsID"),content));
+                    }
+
 
 
                 }
@@ -603,9 +615,9 @@ public class MainActivity extends ActionBarActivity
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-           // AdView mAdView = (AdView) rootView.findViewById(R.id.adView);
-           // AdRequest adRequest = new AdRequest.Builder().build();
-           // mAdView.loadAd(adRequest);
+            AdView mAdView = (AdView) rootView.findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
 
             return rootView;
         }
